@@ -1,4 +1,4 @@
-import gradio as gr
+import streamlit as st
 
 # 🎶 장르 목록 (확장 포함)
 genres = [
@@ -17,22 +17,15 @@ descriptions = {g: f"{g} 유튜브 설명문..." for g in genres}
 # 🖼️ 이미지 프롬프트 (예시 텍스트)
 image_prompts = {g: f"Nanobanana style realistic {g} scene..." for g in genres}
 
-# 🎶 실행 함수
-def generate_content(genre):
-    return (
-        f"🎶 Suno 프롬프트:\n{suno_prompts[genre]}",
-        f"📺 유튜브 설명문:\n{descriptions[genre]}",
-        f"🎨 이미지 프롬프트:\n{image_prompts[genre]}"
-    )
+# 🎶 Streamlit UI
+st.title("🎶 AI 음악 자동화 워크플로우 (Streamlit UI)")
+genre = st.selectbox("장르 선택", genres, index=6)  # 기본값 EDM
 
-# 🌸 Gradio 인터페이스 (파스텔 톤 테마)
-with gr.Blocks(theme=gr.themes.Soft()) as demo:
-    gr.Markdown("## 🎶 AI 음악 자동화 워크플로우 (파스텔 UI)")
-    genre_dropdown = gr.Dropdown(choices=genres, value="EDM", label="장르 선택")
-    suno_output = gr.Textbox(label="Suno 프롬프트", lines=10)
-    desc_output = gr.Textbox(label="유튜브 설명문", lines=10)
-    img_output = gr.Textbox(label="이미지 프롬프트", lines=5)
+st.subheader("🎹 Suno 프롬프트")
+st.text_area("Suno 프롬프트", suno_prompts[genre], height=150)
 
-    genre_dropdown.change(generate_content, inputs=genre_dropdown, outputs=[suno_output, desc_output, img_output])
+st.subheader("📺 유튜브 설명문")
+st.text_area("유튜브 설명문", descriptions[genre], height=150)
 
-demo.launch()
+st.subheader("🎨 이미지 프롬프트")
+st.text_area("이미지 프롬프트", image_prompts[genre], height=100)
